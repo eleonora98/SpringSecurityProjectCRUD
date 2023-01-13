@@ -1,5 +1,6 @@
 package com.uni.fmi.task.bakery.category;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uni.fmi.task.bakery.constants.DbTables;
 import com.uni.fmi.task.bakery.product.Product;
 
@@ -21,7 +23,7 @@ import lombok.Setter;
 @Table(name = DbTables.TABLE_CATEGORIES)
 @Getter
 @Setter
-public class Category {
+public class Category{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,7 @@ public class Category {
 	private String name;
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Product> products;
 
 }

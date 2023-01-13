@@ -12,12 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.uni.fmi.task.bakery.security.SecurityConfig;
-import com.uni.fmi.task.bakery.util.FileUploadUtil;
 
 @Service
 public class UserService {
@@ -99,10 +95,6 @@ public class UserService {
 								userDetails.getAuthorities());
 				
 				SecurityContextHolder.getContext().setAuthentication(auth);
-				
-				ServletRequestAttributes attr = 
-						(ServletRequestAttributes)RequestContextHolder
-						.currentRequestAttributes();
 				
 				session.setAttribute("SPRING_SECURITY_CONTEXT"
 						, SecurityContextHolder.getContext());				

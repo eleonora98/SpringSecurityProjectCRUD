@@ -25,6 +25,9 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
+	@Autowired
+	private ProductFinder productFinder;
+	
 	@Transactional
 	protected ResponseEntity<Product> createProduct(ProductCreationDto dto) throws IOException {
 		Product product = new Product();
@@ -40,7 +43,7 @@ public class ProductService {
 		if (dto.getImage() != null) {
 			String fileName = StringUtils.cleanPath(dto.getImage().getOriginalFilename());
 		    product.setImage(fileName);
-		    String uploadDir = "/product-photos/" + product.getName();
+		    String uploadDir = "product-photos/" + product.getName().hashCode();
 		 
 		    FileUploadUtil.saveFile(uploadDir, fileName, dto.getImage());
 		}
@@ -54,7 +57,7 @@ public class ProductService {
 	}
 	
 	@Transactional
-	protected ResponseEntity<Product> updateProduct(int id, ProductCreationDto dto) {
+	protected ResponseEntity<Product> updateProduct(int id, ProductCreationDto dto) throws IOException {
 		Optional<Product> productData = productRepository.findById(id);
 		if (!productData.isPresent()) {
 			throw new NoSuchEntityException(Product.class, id);
@@ -69,6 +72,13 @@ public class ProductService {
 			throw new NoSuchEntityException(Category.class, dto.getCategoryId());
 		}
 		product.setCategory(category.get());
+		if (dto.getImage() != null) {
+			String fileName = StringUtils.cleanPath(dto.getImage().getOriginalFilename());
+		    product.setImage(fileName);
+		    String uploadDir = "product-photos/" + product.getName().hashCode();
+		 
+		    FileUploadUtil.saveFile(uploadDir, fileName, dto.getImage());
+		}
 		
 		try {
 			productRepository.save(product);
@@ -91,9 +101,14 @@ public class ProductService {
 	
 	@Transactional
 	protected ResponseEntity<List<Product>> getAllProducts() {
-		List<Product> list = productRepository.findAll();
-		return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
-
+		List<Product> products = productRepository.findAll();
+		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+	}
+	
+	@Transactional
+	protected ResponseEntity<List<Product>> getFilteredProducts(ProductSearchDto dto) {
+		List<Product> products = productFinder.findProducts(dto);
+		return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
 	}
 	
 	@Transactional

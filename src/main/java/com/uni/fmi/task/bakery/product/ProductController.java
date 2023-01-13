@@ -30,7 +30,7 @@ public class ProductController {
 	}
 
 	@PutMapping("/{id}")
-	public String updateProduct(@PathVariable("id") int id, @ModelAttribute ProductCreationDto dto) {
+	public String updateProduct(@PathVariable("id") int id, @ModelAttribute ProductCreationDto dto) throws IOException {
 		ResponseEntity<Product> product = productService.updateProduct(id, dto);
 		
 		if (product.getStatusCode().equals(HttpStatus.OK)) {
@@ -44,9 +44,14 @@ public class ProductController {
 		return productService.getProduct(id);
 	}
 
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<List<Product>> getAllProducts() {
 		return productService.getAllProducts();
+	}
+	
+	@GetMapping("/filter")
+	public ResponseEntity<List<Product>> getFilteredProducts(ProductSearchDto dto) {
+		return productService.getFilteredProducts(dto);
 	}
 
 	@DeleteMapping("/{id}")

@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uni.fmi.task.bakery.category.Category;
 import com.uni.fmi.task.bakery.constants.DbTables;
 
@@ -40,7 +39,7 @@ public class Product {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
-	@JsonIgnore
+
 	private Category category;
 
 	@Column(name = "quantity", nullable = false)
@@ -53,7 +52,7 @@ public class Product {
     public String getPhotosImagePath() {
         if (image == null || id == null) return null;
          
-        return "/product-photos/" + name + "/" + image;
+        return "product-photos/" + name.hashCode() + "/" + image;
     }
 
 }

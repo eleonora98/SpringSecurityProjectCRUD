@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Bakery</title>
+<link rel="icon" type="image/x-icon" href="assets/images/thebakery.png">
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,12 +97,9 @@
 			success : function(data) {
 				data.forEach(function(category) {
 					const select = document.querySelector("[name=categoryId]"); // or give it an ID and use document.getElementById("req_one")
-					if (select) {
-						select.options[select.options.length] = new Option(
+					select.options[select.options.length] = new Option(
 								category.name, category.id);
-					} else {
-						alert("Where did the sel go?");
-					}
+					
 				});
 			}
 		});
@@ -118,7 +117,9 @@
 				document.getElementById('quantity').value);
 		form.append('categoryId', document
 				.querySelector("[name=categoryId]").value);
-		form.append('image', image.files[0]);
+		if (image.files[0] != undefined && image.files[0] != null) {
+			form.append('image', image.files[0]);
+		}
 
 		$.ajax({
 			url : "/products/",
@@ -130,11 +131,15 @@
 			complete : function(data) {
 				switch (data.status) {
 				case 201:
-					//window.location.href = "/admin-products";
+					window.location.href = "/admin-products.html";
 					break;
 
 				case 404:
 					element.remove();
+					break;
+				
+				case 500:
+					alert("Грешка! Проверете за дублиращо име")
 					break;
 				}
 			}

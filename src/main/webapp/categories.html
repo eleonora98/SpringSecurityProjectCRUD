@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Bakery</title>
+<link rel="icon" type="image/x-icon" href="assets/images/thebakery.png">
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +33,6 @@
 </head>
 
 <body>
-	<!--onload="hide()"  -->
 
 	<div class="header-top-menu bg-black color-secondary">
 		<div class="container">
@@ -133,8 +134,15 @@
 				name : name
 			},
 			complete : function(data) {
+				switch(data.status) {
+			case 201: 
 				console.log(JSON.parse(JSON.stringify(data)));
 				addCategoryToUI(data.responseJSON.name, data.responseJSON.id);
+				break;
+			case 500:
+				alert("Грешка! Проверете за дублиращо име")
+				break;
+				}
 			}
 		});
 	}
@@ -152,7 +160,7 @@
 
 		category.find('#edit').click(function(e) {
 			e.preventDefault();
-			updateCategory(id);
+			updateCategory(id, category);
 		});
 
 		$('#categories-list').prepend(category);
@@ -173,33 +181,43 @@
 
 	}
 
-	function updateCategory(id) {
-		var category = $('#cloneMe').clone();
-		var name = document.getElementById("name-edit");
-		var edit = document.getElementById("edit-ready");
-		name.style.display = "inline";
-		edit.style.display = "inline";
-		name.value = $('#name-saved').val();
-		$('#edit-ready').on('click', function(e) {
-			e.preventDefault();
-			$.ajax({
-				url : "/categories/" + id,
-				method : "PUT",
-				dataType : "json",
-				data : {
-					categoryName : name.value
-				},
-				complete : function(data) {
-					console.log(JSON.parse(JSON.stringify(data)));
-					hide();
-					if (data.status == 200) {
-						window.location.href = "categories.html";
+	function updateCategory(id, category) {
+		var a, list, singleProductView;
+		list = $('#categories-list')[0];
+		  singleProductView = list.getElementsByTagName("li");
+
+		  // Loop through all list items, and hide those who don't match the search query
+		  for (i = 0; i < singleProductView.length; i++) {
+		    a = singleProductView[i];
+		    console.log(singleProductView[i])
+		    var name = singleProductView[i].find("#name-edit");
+			var edit = document.getElementById("edit-ready");
+			name.style.display = "inline";
+			edit.style.display = "inline";
+			name.value = $('#name-saved').val();
+			$('#edit-ready').on('click', function(e) {
+				e.preventDefault();
+				$.ajax({
+					url : "/categories/" + id,
+					method : "PUT",
+					dataType : "json",
+					data : {
+						categoryName : name.value
+					},
+					complete : function(data) {
+						console.log(JSON.parse(JSON.stringify(data)));
+						hide();
+						if (data.status == 200) {
+							window.location.href = "categories.html";
+						}
+
 					}
-
-				}
+				});
 			});
-		});
 
+		  }
+		var category = $('#cloneMe').clone();
+		
 	}
 
 	function deleteCategory(id, element) {

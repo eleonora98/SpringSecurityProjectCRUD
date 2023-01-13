@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Bakery</title>
+<link rel="icon" type="image/x-icon" href="assets/images/thebakery.png">
+
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,21 +55,36 @@
 	<section class="our-team bg-sand padding-large">
 		<div class="container">
 		
-		<div class="input-group mb-3">
-  				<input type="text" class="form-control"  id="search" onkeyup="filterProducts()" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon2">
-  				<div class="input-group-append">
-    				<span class="input-group-text" id="basic-addon2">Search</span>
-  				</div>
+			<div class="input-group mb-3">
+	  			<input type="text" class="form-control"  id="search" onkeyup="filterProducts()" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon2">
+	  			<div class="input-group-append">
+	    			<span class="input-group-text" id="basic-addon2">Search</span>
+	  			</div>
 			</div>
-		
+			<label for="name" >Търси по критерии:</label>
+			<div class="input-group mb-3">
+			<label for="name" >Име:</label>
+		  			<input type="text" id="name" class="form-control ml-3" aria-label="Text input with segmented dropdown button"> 
+			</div>
+			<div class="input-group mb-3">
+			<label for="description" >Описание:</label>
+		  			<input type="text" id="description" class="form-control ml-3" aria-label="Text input with segmented dropdown button">
+		  			
+				  <div class="input-group-append">
+				    <button type="button" class="input-group-text m-2" onclick="getFilteredProducts()">Търси</button>
+				    
+				  </div>
+			</div>
+			
+			
 			<div class="row">
 				<div id="products-list"></div>
 			</div>
 		</div>
 	</section>
 <!-- product-item col-md-3 pb-4 -->
-	<li class="list-group-item" id="cloneMe">
-		<a href="update-product.html" class="product-image"><img></a>
+	<li class="list-group-item" id="cloneMe" style="display:none;">
+		<a href="update-product.html" src="images/cake-item3.jpg" class="product-image"><img></a>
 		<div class="text-comtent text-center">
 			<h5 class="pt-4">
 				<a href="/update-product">Black Forest Pastry</a>
@@ -110,7 +127,7 @@
 
 		product.find('h5').text(name);
 		product.find('p').text(description);
-		product.find('#price').text(price);
+		product.find('#price').text(price + "лв.");
 		product.find('img').attr('src', image);
 
 		product.find('h5').click(function() {
@@ -174,6 +191,41 @@
 		    }
 		  }
 		}
+	
+	
+	
+	
+	function getFilteredProducts() {
+		var a;
+		list = $('#products-list')[0];
+		  singleProductView = list.getElementsByTagName("li");
+
+		  // Loop through all list items, and hide those who don't match the search query
+		  for (i = 0; i < singleProductView.length; i++) {
+		  
+		      	singleProductView[i].style.display = "none";
+		    
+		  }
+		$.ajax({
+			url : "/products/filter",
+			method : "GET",
+			data: {
+				name: $('#name').val(),
+				description: $('#description').val()
+			},
+			success : function(data) {
+				console.log(JSON.parse(JSON.stringify(data)));
+				data.forEach(function(product) {
+					console.log(JSON.parse(JSON.stringify(product)));
+					addProductToUI(product.description, product.name,
+							product.price, product.quantity,
+							product.photosImagePath, product.id);
+				});
+			}
+		});
+
+	}
+
 
 </script>
 </html>
