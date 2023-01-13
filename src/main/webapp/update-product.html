@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bakery</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="assets/fonts/icomoon/icomoon.css">
+<link rel="stylesheet" type="text/css" href="assets/css/slick.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/slick-theme.css" />
+<link rel="stylesheet" type="text/css"
+	href="assets/css/magnific-popup.css" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+	rel="stylesheet">
+
+<link rel="stylesheet" type="text/css"
+	href="assets/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+</head>
+
+<body>
+
+	<div class="header-top-menu bg-black color-secondary">
+		<div class="container">
+			<div class="row">
+				<div class="wrap flex-container padding-small">
+					<div class="header-top-right">
+						<ul class="list-unstyled d-flex color-secondary">
+							<li class="pr-50"><a href="/login-page">Профил</a></li>
+							<li id="create" class="pr-50"><a href="/create-product">Създай
+									продукт</a></li>
+							<li id="categories" class="pr-50"><a href="/categories-page">Категории</a></li>
+							<li class="pr-50"><a href="admin-products.html">Виж
+									продукти</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--flex-container-->
+			</div>
+		</div>
+	</div>
+	<!----top-menu---->
+	<div class="container">
+		<div class="row">
+			<section class="comment-respond  mb-4 mt-4">
+				<h3 id="title-form">Редактирай продукт</h3>
+				<form id="create-form" method="put" enctype="multipart/form-data"
+					class="form-group mt-3">
+					<label for="description">Описание:</label>
+					<textarea id="description" class="form-control mb-4" name="description" placeholder="Описание" required></textarea>
+					<label for="price">Цена:</label> 
+					<input type="text" name="price" id="price" class="form-control mb-4 mr-4" placeholder="Цена" required>
+					<label for="name">Име:</label> 
+					<input type="text" name="name" id="name" class="form-control mb-4 mr-4" placeholder="Име" required>
+					<label for="quantity" type="number">Количество:</label> 
+					<input type="text" name="quantity" id="quantity" class="form-control mb-4 mr-4" placeholder="Количество" required> 
+					<label for="select-city">Избери Категория:</label> 
+					<select id="select-category" name="categoryId" class="form-control">
+						<option value="0" selected disabled required>Всички</option>
+					</select>
+
+					<div class="form-group">
+						<label for="image">Избери снимка</label> 
+						<input type="file" class="form-control" name="image" id="image" accept="image/png, image/jpeg">
+					</div>
+					<div class="pix_btn mt-2">
+						<button type="submit" id="add" class="btn-hvr-effects">Запази</button>
+					</div>
+				</form>
+			</section>
+		</div>
+	</div>
+</body>
+
+
+<script type="text/javascript">
+	getAllCategories();
+	getProduct();
+
+	function addProductToUI(name, description, price, quantity, categoryId) {
+		document.getElementById("name").value = name;
+		document.getElementById("description").innerHTML = description;
+		document.getElementById("price").value = price;
+		document.getElementById("quantity").value = quantity;
+		document.querySelector("[name=categoryId]").value = categoryId;
+	};
+
+	function getProduct() {
+		var productId = localStorage.getItem('productId');
+		console.log(productId)
+
+		$.ajax({
+			url : "/products/" + productId,
+			method : "GET",
+			data : {
+				id : productId
+			},
+			complete : function(data) {
+				switch (data.status) {
+				case 200:
+					console.log(data.responseJSON)
+					var product = data.responseJSON
+					addProductToUI(product.name, product.description,
+							product.price, product.quantity,
+							product.categoryId)
+
+					break;
+
+				case 401:
+					windows.location.href = "index.html";
+					break;
+
+				case 404:
+					alert("The comment was not found! Are you drunk again????");
+					element.remove();
+					break;
+				}
+			}
+		});
+	}
+
+	function getAllCategories() {
+		$.ajax({
+			url : "/categories",
+			method : "GET",
+			success : function(data) {
+				data.forEach(function(category) {
+					const select = document.querySelector("[name=categoryId]"); // or give it an ID and use document.getElementById("req_one")
+					if (select) {
+						select.options[select.options.length] = new Option(
+								category.name, category.id);
+					} else {
+						alert("Where did the sel go?");
+					}
+				});
+			}
+		});
+
+	};
+
+	$('#create-form').on('submit', function(e) {
+		e.preventDefault();
+		var productId = localStorage.getItem('productId');
+		console.log(productId)
+		var form = new FormData();
+		form.append('description', document
+				.getElementById('description').value);
+		form.append('name', document.getElementById('name').value);
+		form.append('price', document.getElementById('price').value);
+		form.append('quantity',
+				document.getElementById('quantity').value);
+		form.append('categoryId', document
+				.querySelector("[name=categoryId]").value);
+		form.append('image', image.files[0]);
+
+		$.ajax({
+			url : "/products/" + productId,
+			method : "PUT",
+			dataType : 'json',
+			data : form,
+			processData : false,
+			contentType : false,
+			complete : function(data) {
+				switch (data.status) {
+				case 200:
+					window.location.href = "/admin-products";
+					break;
+				}
+			}
+		});
+
+	});
+</script>
+</html>

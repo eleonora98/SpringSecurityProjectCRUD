@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bakery</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="assets/fonts/icomoon/icomoon.css">
+<link rel="stylesheet" type="text/css" href="assets/css/slick.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/slick-theme.css" />
+<link rel="stylesheet" type="text/css"
+	href="assets/css/magnific-popup.css" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+	rel="stylesheet">
+
+<link rel="stylesheet" type="text/css"
+	href="assets/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+	<!--onload="hide()"  -->
+
+	<div class="header-top-menu bg-black color-secondary">
+		<div class="container">
+			<div class="row">
+				<div class="wrap flex-container padding-small">
+					<div class="header-top-right">
+						<ul class="list-unstyled d-flex color-secondary">
+							<li class="pr-50"><a href="/login-page">Профил</a></li>
+							<li id="create" class="pr-50"><a
+								href="/create-product">Създай продукт</a></li>
+							<li id="categories" class="pr-50"><a href="/categories-page">Категории</a></li>
+							<li class="pr-50"><a href="admin-products.html">Виж
+									продукти</a></li>
+
+						</ul>
+					</div>
+				</div>
+				<!--flex-container-->
+			</div>
+		</div>
+	</div>
+	<!----top-menu---->
+	<div class="container">
+		<div class="row">
+			<section class="comment-respond  mb-4 mt-4">
+				<h3>Създай категория</h3>
+				<form id="category-form" method="post" class="form-group mt-3">
+					<div class="comment-form">
+						<input type="text" name="name" id="name"
+							class="form-control mb-4 mr-4" placeholder="Name" required>
+					</div>
+					<div class="pix_btn mt-2">
+						<button type="submit" id="add" class="btn-hvr-effects">Създай</button>
+					</div>
+				</form>
+			</section>
+		</div>
+	</div>
+
+	<section class="our-team bg-sand padding-large">
+		<div class="container">
+			<div class="row">
+				<ul class="list-group" style="min-height: 241px;"
+					id="categories-list"></ul>
+			</div>
+		</div>
+	</section>
+	<li class="list-group-item" style="display: none;" id="cloneMe">
+		<div class="row">
+			<div class="col-sm-7 col-xs-6">
+				<h4>Категория</h4>
+				<input type="text" name="name-edit" id="name-edit"
+					class="form-control mb-4 mr-4" placeholder="Name">
+
+				<p id="name-saved">test</p>
+			</div>
+			<div class="col-sm-3 col-xs-3">
+				<button type="button" id="delete"
+					class="btn btn-danger pull-right remove-post">
+					<span class="glyphicon glyphicon-remove"></span><span
+						class="hidden-xs"> Изтрий</span>
+				</button>
+			</div>
+			<div class="col-sm-3 col-xs-3">
+				<button type="button" id="edit-ready" class="btn-hvr-effects">
+					<span class="glyphicon glyphicon-remove"></span><span
+						class="hidden-xs"> Готово</span>
+				</button>
+			</div>
+			<div class="pix_btn mt-2">
+				<a href="#" id="edit" class="btn-hvr-effects">Редактирай</a>
+			</div>
+		</div>
+	</li>
+</body>
+
+
+<script type="text/javascript">
+	hide();
+	getAllCategories();
+
+	function hide() {
+		document.getElementById("name-edit").style.display = "none";
+		document.getElementById("edit-ready").style.display = "none";
+	}
+
+	$('#category-form').submit(function(e) {
+		e.preventDefault();
+		addCategory();
+	});
+
+	function addCategory() {
+		var name = $('#name').val();
+		$.ajax({
+			url : "/categories",
+			method : "POST",
+			dataType : "json",
+			data : {
+				name : name
+			},
+			complete : function(data) {
+				console.log(JSON.parse(JSON.stringify(data)));
+				addCategoryToUI(data.responseJSON.name, data.responseJSON.id);
+			}
+		});
+	}
+
+	function addCategoryToUI(name, id) {
+		var category = $('#cloneMe').clone();
+
+		category.find('p').text(name);
+		category.attr('id', id);
+
+		category.find('#delete').on('click', function(e) {
+			e.preventDefault();
+			deleteCategory(id, category);
+		});
+
+		category.find('#edit').click(function(e) {
+			e.preventDefault();
+			updateCategory(id);
+		});
+
+		$('#categories-list').prepend(category);
+
+		category.show();
+	}
+
+	function getAllCategories() {
+		$.ajax({
+			url : "/categories",
+			method : "GET",
+			success : function(data) {
+				data.forEach(function(category) {
+					addCategoryToUI(category.name, category.id);
+				});
+			}
+		});
+
+	}
+
+	function updateCategory(id) {
+		var category = $('#cloneMe').clone();
+		var name = document.getElementById("name-edit");
+		var edit = document.getElementById("edit-ready");
+		name.style.display = "inline";
+		edit.style.display = "inline";
+		name.value = $('#name-saved').val();
+		$('#edit-ready').on('click', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url : "/categories/" + id,
+				method : "PUT",
+				dataType : "json",
+				data : {
+					categoryName : name.value
+				},
+				complete : function(data) {
+					console.log(JSON.parse(JSON.stringify(data)));
+					hide();
+					if (data.status == 200) {
+						window.location.href = "categories.html";
+					}
+
+				}
+			});
+		});
+
+	}
+
+	function deleteCategory(id, element) {
+		$.ajax({
+			url : "/categories/" + id,
+			method : "DELETE",
+			data : {
+				id : id
+			},
+			dataType : "json",
+			complete : function(data) {
+				switch (data.status) {
+				case 200:
+					element.remove();
+					break;
+
+				case 401:
+					windows.location.href = "index.html";
+					break;
+
+				case 404:
+					alert("The comment was not found! Are you drunk again????");
+					element.remove();
+					break;
+				}
+			}
+		});
+	}
+
+</script>
+</html>

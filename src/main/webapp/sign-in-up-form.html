@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bakery</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="assets/fonts/icomoon/icomoon.css">
+<link rel="stylesheet" type="text/css" href="assets/css/slick.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/slick-theme.css" />
+<link rel="stylesheet" type="text/css"
+	href="assets/css/magnific-popup.css" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+	rel="stylesheet">
+
+<link rel="stylesheet" type="text/css"
+	href="assets/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+<link
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body onload="getUser()">
+	<div class="header-top-menu bg-black color-secondary">
+		<div class="container">
+			<div class="row">
+				<div class="wrap flex-container padding-small">
+					<div class="contact-block">
+						<span class="pr-50"><i class="icon icon-phone"></i>5555-00-444</span>
+						<span class="color-secondary"><i
+							class="icon icon-envelope-o"></i><a href="#">
+								bakery@gmail.com</a></span>
+					</div>
+
+					<div class="header-top-right">
+						<ul class="list-unstyled d-flex color-secondary">
+							<li class="pr-50"><a href="#">Профил</a></li>
+							<li class="pr-50" id="admin" style="display: none;"><a href="/admin">Админ</a></li>
+							<li class="pr-50"><a href="index.html">Начало</a></li>
+						</ul>
+					</div>
+				</div>
+				<!--flex-container-->
+			</div>
+		</div>
+	</div>
+	<!----top-menu---->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3 mt-3" id="sign-in-up">
+				<div class="panel panel-login">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-xs-6">
+								<a onclick="loginClicked()" id="login-form-link">Вход</a>
+							</div>
+							<div class="col-xs-6">
+								<a onclick="registerClicked()" id="register-form-link">Регистрация</a>
+							</div>
+						</div>
+						<hr>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<form id="login-form" method="post" role="form"
+									style="display: block;">
+									<div class="form-group">
+										<input type="text" name="username" id="username" tabindex="1"
+											class="form-control" placeholder="Потребителско име" value="" required>
+									</div>
+									<div class="form-group">
+										<input type="password" name="password" id="password"
+											tabindex="2" class="form-control" placeholder="Парола" required>
+									</div>
+									<div class="form-group text-center">
+										<input type="checkbox" tabindex="3" class="" name="remember"
+											id="remember"> <label for="remember">
+											Remember Me</label>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-6 col-sm-offset-3">
+												<input type="submit" name="login-submit" id="login-submit"
+													tabindex="4" class="form-control btn btn-login"
+													value="Вход">
+											</div>
+										</div>
+									</div>
+								</form>
+
+								<form id="register-form" method="post" role="form"
+									style="display: none;">
+									<div class="form-group">
+										<input type="text" name="username" id="register-username"
+											tabindex="1" class="form-control" placeholder="Потребителско име"
+											value="" required>
+									</div>
+									<div class="form-group">
+										<input type="text" name="firstName" id="firstName"
+											tabindex="1" class="form-control" placeholder="Име"
+											value="" required>
+									</div>
+									<div class="form-group">
+										<input type="text" name="lastName" id="lastName" tabindex="1"
+											class="form-control" placeholder="Фамилия" value="" required>
+									</div>
+									<div class="form-group">
+										<input type="email" name="email" id="email" tabindex="1"
+											class="form-control" placeholder="Имейл" value="" required>
+									</div>
+									<div class="form-group">
+										<input type="password" name="password" id="register-password"
+											tabindex="2" class="form-control" placeholder="Парола" required>
+									</div>
+									<div class="form-group">
+										<input type="password" name="confirmPassword"
+											id="confirm-password" tabindex="2" class="form-control"
+											placeholder="Повтори парола" required>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="pix_btn text-center m-auto">
+												<input type="submit" name="register-submit"
+													id="register-submit" tabindex="4"
+													class="form-control btn btn-register" value="Регистрация">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-6 pl-5 mt-4">
+			<div id="profile" style="display: none;">
+				<h2>
+					<a href="#">Потребител</a>
+				</h2>
+				<h3 id="username-logged">username</h3>
+				<p class="price colored" id="email-logged">email@example.com</p>
+				<span id="first-name-logged">FirstName</span>
+				<p id="last-name-logged">LastName</p>
+				<button type="submit" name="logout" id="logout" class="btn-hvr-effects">Изход</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+<script type="text/javascript">
+	getUser();
+
+	function loginClicked() {
+		document.getElementById("register-form").style.display = "none";
+		document.getElementById("login-form").style.display = "inline";
+	}
+
+	function registerClicked() {
+		document.getElementById("login-form").style.display = "none";
+		document.getElementById("register-form").style.display = "inline";
+	}
+
+	$('#register-form').submit(function(e) {
+		e.preventDefault();
+		$.ajax({
+			url : "/register",
+			data : {
+				username : $('#register-username').val(),
+				firstName : $('#firstName').val(),
+				lastName : $('#lastName').val(),
+				email : $('#email').val(),
+				password : $('#register-password').val(),
+				repeatPassword : $('#confirm-password').val()
+			},
+			type : "POST",
+			dataType : "json",
+			success : function() {
+				alert("Успешна регистрация!")
+				getUser();
+				window.location.reload()
+			}
+		});
+	});
+
+	$('#login-form').submit(function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			url : "/login",
+			method : "POST",
+			data : {
+				username : $('#username').val(),
+				password : $('#password').val()
+			},
+			success : function(data) {
+				window.location.replace(data);
+			},
+			fail : function() {
+				alert("Request failed.....");
+			}
+		});
+
+	});
+
+	$('#logout').on('click', function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			url : "logout",
+			method : "POST",
+			complete : function(data) {
+				if (data.status == 418) {
+					alert("Why are you a teapot?!");
+				}
+
+				window.location.reload();
+			}
+		});
+
+	});
+
+	function userToUI(username, email, firstName, lastName) {
+		document.getElementById("username-logged").innerHTML = "Здравей, " + username + "!";
+		document.getElementById("email-logged").innerHTML = "Твоят имейл: " + email;
+		document.getElementById("first-name-logged").innerHTML = "Име: " + firstName;
+		document.getElementById("last-name-logged").innerHTML = "Фамилия: " + lastName;
+	}
+
+	function getUser() {
+		$.ajax({
+			url : "/current-user",
+			method : "GET",
+			success : function(data) {
+				console.log(JSON.parse(JSON.stringify(data)));
+				if (data != null && data != undefined) {
+					document.getElementById("sign-in-up").style.display = "none";
+					document.getElementById("profile").style.display = "inline";
+					userToUI(data.username, data.email, data.firstName,
+							data.lastName);
+					for (const role in data.roles) {
+						if (role.name == "ROLE_ADMIN") {
+							document.getElementById("admin").style.display = "inline";
+						} else {
+							document.getElementById("admin").style.display = "block";
+						}
+					} 
+				}
+			}
+		});
+	}
+
+</script>
+</html>
