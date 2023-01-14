@@ -2,6 +2,7 @@ package com.uni.fmi.task.bakery.user;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<User> register(@ModelAttribute UserCreationDto dto, HttpSession session) throws Exception {
+	public ResponseEntity<User> register(@ModelAttribute @Valid UserCreationDto dto, HttpSession session) throws Exception {
 		User user = userService.registerUser(dto);
 		if (user != null) {
 			session.setAttribute("loggedUser", user);
@@ -76,7 +77,7 @@ public class UserController {
 			session.invalidate();
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
-		return new ResponseEntity<Boolean>(false, HttpStatus.I_AM_A_TEAPOT);
+		return new ResponseEntity<Boolean>(false, HttpStatus.CONFLICT);
 	}
 
 }

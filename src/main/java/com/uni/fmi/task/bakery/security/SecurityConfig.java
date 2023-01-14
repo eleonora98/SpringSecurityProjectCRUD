@@ -40,17 +40,17 @@ public class SecurityConfig {
 			.antMatchers("/assets/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/products/**", "/categories/**").permitAll()
 			.antMatchers("/create-product", "/update-product", "/admin", 
-					"/categories-page").hasAnyAuthority("ROLE_ADMIN")
+					"/categories-page").hasRole("ADMIN")
 
 			//post requests
 			.antMatchers(HttpMethod.POST, "/products", "/categories/add")
-				.hasAnyAuthority("ROLE_ADMIN")
+				.hasRole("ADMIN")
 			//put requests
 			.antMatchers(HttpMethod.PUT, "/products/{id}", "/categories/{id}")
-				.hasAnyAuthority("ROLE_ADMIN")
+				.hasRole("ADMIN")
 			//delete requests
 			.antMatchers(HttpMethod.DELETE, "/products/{id}", "/categories/{id}")
-				.hasAnyAuthority("ROLE_ADMIN")
+				.hasRole("ADMIN")
 				
 			.anyRequest().authenticated()
 			.and().csrf().disable();

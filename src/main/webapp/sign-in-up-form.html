@@ -258,10 +258,11 @@
 					userToUI(data.username, data.email, data.firstName,
 							data.lastName);
 					for (const role in data.roles) {
-						if (role.name == "ROLE_ADMIN") {
-							document.getElementById("admin").style.display = "inline";
-						} else {
+						console.log(role)
+						if (role.name === "ROLE_ADMIN") {
 							document.getElementById("admin").style.display = "block";
+						} else {
+							document.getElementById("admin").style.display = "none";
 						}
 					} 
 				}

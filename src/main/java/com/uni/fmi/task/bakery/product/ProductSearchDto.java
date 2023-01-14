@@ -9,5 +9,6 @@ public class ProductSearchDto {
 	
 	private String name;
 	private String description;
+	private String categoryId;
 
 }

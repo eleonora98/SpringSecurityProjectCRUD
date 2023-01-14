@@ -69,8 +69,21 @@
 					</div>
 				</form>
 			</section>
+			<section class="comment-respond  mb-4 mt-4" id="edit-container" style="display: none;">
+				<h3>Редактирай категория</h3>
+				<form id="category-form" method="put" class="form-group mt-3">
+					<div class="comment-form">
+						<input type="text" name="name" id="name-edit"
+							class="form-control mb-4 mr-4" placeholder="Name" required>
+					</div>
+					<div class="pix_btn mt-2">
+						<button type="submit" id="edit-submit" class="btn-hvr-effects">Редактирай</button>
+					</div>
+				</form>
+			</section>
 		</div>
 	</div>
+
 
 	<section class="our-team bg-sand padding-large">
 		<div class="container">
@@ -84,9 +97,6 @@
 		<div class="row">
 			<div class="col-sm-7 col-xs-6">
 				<h4>Категория</h4>
-				<input type="text" name="name-edit" id="name-edit"
-					class="form-control mb-4 mr-4" placeholder="Name">
-
 				<p id="name-saved">test</p>
 			</div>
 			<div class="col-sm-3 col-xs-3">
@@ -94,12 +104,6 @@
 					class="btn btn-danger pull-right remove-post">
 					<span class="glyphicon glyphicon-remove"></span><span
 						class="hidden-xs"> Изтрий</span>
-				</button>
-			</div>
-			<div class="col-sm-3 col-xs-3">
-				<button type="button" id="edit-ready" class="btn-hvr-effects">
-					<span class="glyphicon glyphicon-remove"></span><span
-						class="hidden-xs"> Готово</span>
 				</button>
 			</div>
 			<div class="pix_btn mt-2">
@@ -111,13 +115,9 @@
 
 
 <script type="text/javascript">
-	hide();
 	getAllCategories();
 
-	function hide() {
-		document.getElementById("name-edit").style.display = "none";
-		document.getElementById("edit-ready").style.display = "none";
-	}
+
 
 	$('#category-form').submit(function(e) {
 		e.preventDefault();
@@ -160,7 +160,7 @@
 
 		category.find('#edit').click(function(e) {
 			e.preventDefault();
-			updateCategory(id, category);
+			updateCategory(id, name);
 		});
 
 		$('#categories-list').prepend(category);
@@ -181,32 +181,20 @@
 
 	}
 
-	function updateCategory(id, category) {
-		var a, list, singleProductView;
-		list = $('#categories-list')[0];
-		  singleProductView = list.getElementsByTagName("li");
-
-		  // Loop through all list items, and hide those who don't match the search query
-		  for (i = 0; i < singleProductView.length; i++) {
-		    a = singleProductView[i];
-		    console.log(singleProductView[i])
-		    var name = singleProductView[i].find("#name-edit");
-			var edit = document.getElementById("edit-ready");
-			name.style.display = "inline";
-			edit.style.display = "inline";
-			name.value = $('#name-saved').val();
-			$('#edit-ready').on('click', function(e) {
+	function updateCategory(id, name) {
+			document.getElementById("edit-container").style.display = "inline";
+			document.getElementById("name-edit").value = name
+			$('#edit-submit').on('click', function(e) {
 				e.preventDefault();
 				$.ajax({
 					url : "/categories/" + id,
 					method : "PUT",
 					dataType : "json",
 					data : {
-						categoryName : name.value
+						categoryName : $('#name-edit').val()
 					},
 					complete : function(data) {
 						console.log(JSON.parse(JSON.stringify(data)));
-						hide();
 						if (data.status == 200) {
 							window.location.href = "categories.html";
 						}
@@ -215,7 +203,7 @@
 				});
 			});
 
-		  }
+		  
 		var category = $('#cloneMe').clone();
 		
 	}

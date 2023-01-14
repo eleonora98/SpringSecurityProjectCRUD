@@ -66,16 +66,23 @@
 			<label for="name" >Име:</label>
 		  			<input type="text" id="name" class="form-control ml-3" aria-label="Text input with segmented dropdown button"> 
 			</div>
-			<div class="input-group mb-3">
-			<label for="description" >Описание:</label>
-		  			<input type="text" id="description" class="form-control ml-3" aria-label="Text input with segmented dropdown button">
-		  			
-				  <div class="input-group-append">
-				    <button type="button" class="input-group-text m-2" onclick="getFilteredProducts()">Търси</button>
-				    
-				  </div>
-			</div>
 			
+			<!-- <div class="input-group mb-3">
+			  	<select name="categoryId" class="custom-select">
+				   <option selected value="0">Избери...</option>				  
+				</select>
+  				<div class="input-group-append">
+    				<label class="input-group-text" for="inputGroupSelect02">Категория</label>
+  				</div>
+			</div>
+			 -->
+			<div class="input-group mb-3">
+				<label for="description" >Описание:</label>
+		  		<input type="text" id="description" class="form-control ml-3" aria-label="Text input with segmented dropdown button">		
+			 	<div class="input-group-append">
+			    	<button type="button" class="input-group-text m-2" onclick="getFilteredProducts()">Търси</button>
+			 	</div>
+			</div>
 			
 			<div class="row">
 				<div id="products-list"></div>
@@ -104,6 +111,7 @@
 
 <script type="text/javascript">
 	getAllProducts();
+	getAllCategories();
 
 	function getAllProducts() {
 		$.ajax({
@@ -192,29 +200,22 @@
 		  }
 		}
 	
-	
-	
-	
 	function getFilteredProducts() {
 		var a;
 		list = $('#products-list')[0];
-		  singleProductView = list.getElementsByTagName("li");
-
-		  // Loop through all list items, and hide those who don't match the search query
-		  for (i = 0; i < singleProductView.length; i++) {
-		  
-		      	singleProductView[i].style.display = "none";
-		    
-		  }
+		singleProductView = list.getElementsByTagName("li");
+		for (i = 0; i < singleProductView.length; i++) {
+		   singleProductView[i].style.display = "none";
+		}
 		$.ajax({
 			url : "/products/filter",
 			method : "GET",
 			data: {
 				name: $('#name').val(),
-				description: $('#description').val()
+				description: $('#description').val(),
+				categoryId: document.querySelector("[name=categoryId]").value
 			},
 			success : function(data) {
-				console.log(JSON.parse(JSON.stringify(data)));
 				data.forEach(function(product) {
 					console.log(JSON.parse(JSON.stringify(product)));
 					addProductToUI(product.description, product.name,
@@ -226,6 +227,22 @@
 
 	}
 
+	/* function getAllCategories() {
+		$.ajax({
+			url : "/categories",
+			method : "GET",
+			success : function(data) {
+				data.forEach(function(category) {
+					const select = document.querySelector("[name=categoryId]"); // or give it an ID and use document.getElementById("req_one")
+					select.options[select.options.length] = new Option(
+								category.name, category.id);
+					
+				});
+			}
+		});
+
+	};
+ */
 
 </script>
 </html>

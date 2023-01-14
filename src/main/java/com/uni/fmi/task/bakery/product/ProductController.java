@@ -3,6 +3,8 @@ package com.uni.fmi.task.bakery.product;
 import java.io.IOException;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +26,7 @@ public class ProductController {
 	private ProductService productService;
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Product> createProduct(@ModelAttribute ProductCreationDto dto)
+	public ResponseEntity<Product> createProduct(@ModelAttribute @Valid ProductCreationDto dto)
 			throws IOException {
 		return productService.createProduct(dto);
 	}

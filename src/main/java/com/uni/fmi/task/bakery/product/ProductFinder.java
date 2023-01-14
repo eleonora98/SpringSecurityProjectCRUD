@@ -22,16 +22,20 @@ public class ProductFinder {
 
 	    CriteriaBuilder cb = em.getCriteriaBuilder();
 	    CriteriaQuery<Product> cq = cb.createQuery(Product.class);
-	    Root<Product> quest = cq.from(Product.class);
+	    Root<Product> product = cq.from(Product.class);
 	    List<Predicate> predicates = new ArrayList<Predicate>();
 
 	    if (search.getName() != null) {
-	        predicates.add(cb.like(quest.get("name"), search.getName()));
+	        predicates.add(cb.like(product.get("name"), search.getName()));
 	    }
 	    if (search.getDescription() != null) {
-	        predicates.add(cb.like(quest.get("description"), "%" + search.getDescription() + "%"));
+	        predicates.add(cb.like(product.get("description"), "%" + search.getDescription() + "%"));
 	    }
-	    cq.select(quest).where(predicates.toArray(new Predicate[] {}));
+//	    if (search.getCategoryId() != null && search.getCategoryId() != "0") {
+//	    	 Join<Product, Category> country = product.join("category");
+//	        predicates.add(cb.like(country.get("id").as(String.class),  "%" + search.getCategoryId() + "%"));
+//	    }
+	    cq.select(product).where(predicates.toArray(new Predicate[] {}));
 	    List<Product> products = em.createQuery(cq).getResultList();
 	    System.out.print(products.size());
 	    return products;

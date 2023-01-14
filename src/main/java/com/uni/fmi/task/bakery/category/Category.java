@@ -1,6 +1,5 @@
 package com.uni.fmi.task.bakery.category;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
