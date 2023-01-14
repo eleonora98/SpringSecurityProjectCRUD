@@ -1,6 +1,7 @@
 package com.uni.fmi.task.bakery.product;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,11 +16,11 @@ public class ProductCreationDto {
 	private String name;
 	@NotBlank
 	private String description;
-	@NotBlank
+	@NotNull
 	private Double price;
-	@NotBlank
+	@NotNull
 	private Integer quantity;
-	@NotBlank
+	@NotNull
 	private Integer categoryId;
 	private MultipartFile image;
 
